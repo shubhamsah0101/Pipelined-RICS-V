@@ -11,14 +11,12 @@ module alu_full(
     always @(*) begin
         case (alu_control)
             3'b000: begin  // ADD
-                temp_result = {1'b0, src_a + src_b};
-                result = temp_result[31:0];
+                result = src_a + src_b;
                 zero_flag = (result == 32'd0);
             end
             
             3'b001: begin  // SUB
-                temp_result = {1'b0, src_a - src_b};
-                result = temp_result[31:0];
+                result = src_a - src_b;
                 zero_flag = (result == 32'd0);
             end
             
@@ -37,7 +35,7 @@ module alu_full(
                 zero_flag = (result == 32'd0);
             end
             
-            3'b101: begin  // SLT (set less than)
+            3'b101: begin  // SLT
                 result = ($signed(src_a) < $signed(src_b)) ? 32'd1 : 32'd0;
                 zero_flag = (result == 32'd0);
             end

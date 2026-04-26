@@ -28,16 +28,16 @@ module stage_ex(
     output reg [31:0] alu_result,
     output reg [31:0] write_data_out,
     output reg [31:0] pc_plus4_out,
-    output reg [31:0] branch_target_out,
-    output reg branch_taken
+    output wire [31:0] branch_target_out,  // Changed from reg to wire
+    output wire branch_taken                // Changed from reg to wire
 );
 
-    reg [31:0] src_a, src_b;
+    wire [31:0] src_a, src_b;  // Changed to wire
     wire [31:0] alu_src_b;
     wire alu_zero;
-    reg [31:0] alu_out;
+    wire [31:0] alu_out;        // Changed to wire
     
-    // Forwarding logic
+    // Forwarding logic (combinational)
     wire [31:0] forward_a = (reg_write_mem && (rd_mem != 5'd0) && (rd_mem == rs1)) ? alu_res_mem :
                              (reg_write_wb && (rd_wb != 5'd0) && (rd_wb == rs1)) ? result_wb :
                              read1;

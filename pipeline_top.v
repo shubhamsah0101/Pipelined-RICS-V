@@ -1,6 +1,6 @@
 module pipeline_top(
     input wire clk,
-    input wire rst
+    input wire rst  // Active low: 0 = normal operation, 1 = reset
 );
 
     // IF/ID signals
@@ -31,7 +31,7 @@ module pipeline_top(
     // Stage 1: Fetch
     stage_if if_stage (
         .clk(clk),
-        .rst(rst),
+        .rst(~rst),  // Invert: Top rst=0 --> internal rst=1 (active high)
         .branch_taken(branch_taken_ex),
         .branch_target(branch_target_ex),
         .pc_out(pc_if),
@@ -42,7 +42,7 @@ module pipeline_top(
     // Stage 2: Decode
     stage_id id_stage (
         .clk(clk),
-        .rst(rst),
+        .rst(~rst),
         .instr_in(instr_if),
         .pc_in(pc_if),
         .pc_plus4_in(pc_plus4_if),
@@ -68,7 +68,7 @@ module pipeline_top(
     // Stage 3: Execute
     stage_ex ex_stage (
         .clk(clk),
-        .rst(rst),
+        .rst(~rst),
         .reg_write_in(reg_write_id),
         .alu_src_in(alu_src_id),
         .mem_write_in(mem_write_id),
@@ -103,7 +103,7 @@ module pipeline_top(
     // Stage 4: Memory
     stage_mem mem_stage (
         .clk(clk),
-        .rst(rst),
+        .rst(~rst),
         .reg_write_in(reg_write_ex),
         .mem_to_reg_in(mem_to_reg_ex),
         .mem_write_in(mem_write_ex),
@@ -121,7 +121,7 @@ module pipeline_top(
     // Stage 5: Writeback
     stage_wb wb_stage (
         .clk(clk),
-        .rst(rst),
+        .rst(~rst),
         .reg_write_in(reg_write_mem),
         .mem_to_reg_in(mem_to_reg_mem),
         .rd_in(rd_mem),
