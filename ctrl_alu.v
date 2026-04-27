@@ -4,19 +4,13 @@ module ctrl_alu(
     input wire [6:0] funct7,
     output reg [2:0] alu_control
 );
-
     always @(*) begin
         case (alu_op)
             2'b00: alu_control = 3'b000;  // ADD for lw/sw
             2'b01: alu_control = 3'b001;  // SUB for beq
-            2'b10: begin  // R-type or I-type
+            2'b10: begin
                 case (funct3)
-                    3'b000: begin  // add or sub
-                        if (funct7 == 7'b0100000)
-                            alu_control = 3'b001;  // SUB
-                        else
-                            alu_control = 3'b000;  // ADD
-                    end
+                    3'b000: alu_control = (funct7 == 7'b0100000) ? 3'b001 : 3'b000;
                     3'b111: alu_control = 3'b010;  // AND
                     3'b110: alu_control = 3'b011;  // OR
                     3'b100: alu_control = 3'b100;  // XOR
@@ -27,5 +21,4 @@ module ctrl_alu(
             default: alu_control = 3'b000;
         endcase
     end
-
 endmodule

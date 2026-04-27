@@ -7,63 +7,14 @@ module ctrl_main(
     output reg branch,
     output reg [1:0] alu_op
 );
-
     always @(*) begin
         case (opcode)
-            7'b0110011: begin  // R-type (add, sub, and, or, slt)
-                reg_write = 1'b1;
-                alu_src = 1'b0;
-                mem_write = 1'b0;
-                mem_to_reg = 1'b0;
-                branch = 1'b0;
-                alu_op = 2'b10;
-            end
-            
-            7'b0010011: begin  // I-type (addi)
-                reg_write = 1'b1;
-                alu_src = 1'b1;
-                mem_write = 1'b0;
-                mem_to_reg = 1'b0;
-                branch = 1'b0;
-                alu_op = 2'b10;
-            end
-            
-            7'b0000011: begin  // lw (load word)
-                reg_write = 1'b1;
-                alu_src = 1'b1;
-                mem_write = 1'b0;
-                mem_to_reg = 1'b1;
-                branch = 1'b0;
-                alu_op = 2'b00;
-            end
-            
-            7'b0100011: begin  // sw (store word)
-                reg_write = 1'b0;
-                alu_src = 1'b1;
-                mem_write = 1'b1;
-                mem_to_reg = 1'b0;
-                branch = 1'b0;
-                alu_op = 2'b00;
-            end
-            
-            7'b1100011: begin  // beq (branch)
-                reg_write = 1'b0;
-                alu_src = 1'b0;
-                mem_write = 1'b0;
-                mem_to_reg = 1'b0;
-                branch = 1'b1;
-                alu_op = 2'b01;
-            end
-            
-            default: begin
-                reg_write = 1'b0;
-                alu_src = 1'b0;
-                mem_write = 1'b0;
-                mem_to_reg = 1'b0;
-                branch = 1'b0;
-                alu_op = 2'b00;
-            end
+            7'b0110011: begin reg_write=1; alu_src=0; mem_write=0; mem_to_reg=0; branch=0; alu_op=2'b10; end  // R-type
+            7'b0010011: begin reg_write=1; alu_src=1; mem_write=0; mem_to_reg=0; branch=0; alu_op=2'b10; end  // I-type (addi)
+            7'b0000011: begin reg_write=1; alu_src=1; mem_write=0; mem_to_reg=1; branch=0; alu_op=2'b00; end  // lw
+            7'b0100011: begin reg_write=0; alu_src=1; mem_write=1; mem_to_reg=0; branch=0; alu_op=2'b00; end  // sw
+            7'b1100011: begin reg_write=0; alu_src=0; mem_write=0; mem_to_reg=0; branch=1; alu_op=2'b01; end  // beq
+            default:     begin reg_write=0; alu_src=0; mem_write=0; mem_to_reg=0; branch=0; alu_op=2'b00; end
         endcase
     end
-
 endmodule

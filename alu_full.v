@@ -5,46 +5,16 @@ module alu_full(
     output reg [31:0] result,
     output reg zero_flag
 );
-
-    reg [32:0] temp_result;
-
     always @(*) begin
         case (alu_control)
-            3'b000: begin  // ADD
-                result = src_a + src_b;
-                zero_flag = (result == 32'd0);
-            end
-            
-            3'b001: begin  // SUB
-                result = src_a - src_b;
-                zero_flag = (result == 32'd0);
-            end
-            
-            3'b010: begin  // AND
-                result = src_a & src_b;
-                zero_flag = (result == 32'd0);
-            end
-            
-            3'b011: begin  // OR
-                result = src_a | src_b;
-                zero_flag = (result == 32'd0);
-            end
-            
-            3'b100: begin  // XOR
-                result = src_a ^ src_b;
-                zero_flag = (result == 32'd0);
-            end
-            
-            3'b101: begin  // SLT
-                result = ($signed(src_a) < $signed(src_b)) ? 32'd1 : 32'd0;
-                zero_flag = (result == 32'd0);
-            end
-            
-            default: begin
-                result = 32'd0;
-                zero_flag = 1'b0;
-            end
+            3'b000: result = src_a + src_b;
+            3'b001: result = src_a - src_b;
+            3'b010: result = src_a & src_b;
+            3'b011: result = src_a | src_b;
+            3'b100: result = src_a ^ src_b;
+            3'b101: result = ($signed(src_a) < $signed(src_b)) ? 32'd1 : 32'd0;
+            default: result = 32'd0;
         endcase
+        zero_flag = (result == 32'd0);
     end
-
 endmodule
